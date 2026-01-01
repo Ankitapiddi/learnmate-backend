@@ -13,23 +13,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ROOT ROUTE (MANDATORY)
+// ✅ ROOT ROUTE (THIS WAS MISSING)
 app.get("/", (req, res) => {
-  res.send("LearnMate backend running");
+  res.send("LearnMate backend is live 🚀");
 });
 
-// ROUTES
+// API ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", notesRoutes);
 app.use("/api/chat", chatRoutes);
 
-// MONGO
+// DB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 
-// PORT (RAILWAY USES THIS)
+// PORT
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);

@@ -2,24 +2,29 @@ const express = require("express");
 const router = express.Router();
 const Note = require("../models/Note");
 
-/**
- * TEST ROUTE (IMPORTANT)
- * GET /api/notes
- */
+// ✅ TEST ROUTE (IMPORTANT)
 router.get("/", (req, res) => {
   res.json({ message: "Notes API working ✅" });
 });
 
-/**
- * GET notes for a user
- * GET /api/notes/user/:userId
- */
-router.get("/user/:userId", async (req, res) => {
+// Create note
+router.post("/", async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.params.userId });
+    const note = new Note(req.body);
+    await note.save();
+    res.status(201).json(note);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get notes by user
+router.get("/:user", async (req, res) => {
+  try {
+    const notes = await Note.find({ user: req.params.user });
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching notes" });
+    res.status(500).json({ error: err.message });
   }
 });
 

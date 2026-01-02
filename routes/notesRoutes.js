@@ -3,36 +3,45 @@ import Note from "../models/Note.js";
 
 const router = express.Router();
 
-// TEST ROUTE
+/**
+ * ✅ TEST ROUTE
+ * GET /api/notes/test
+ */
 router.get("/test", (req, res) => {
   res.json({ message: "Notes API working ✅" });
 });
 
-// GET all notes
+/**
+ * ✅ GET ALL NOTES
+ * GET /api/notes
+ */
 router.get("/", async (req, res) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find().sort({ createdAt: -1 });
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
-// CREATE note
+/**
+ * ✅ CREATE NOTE
+ * POST /api/notes
+ */
 router.post("/", async (req, res) => {
   try {
     const { title, content } = req.body;
 
     if (!title || !content) {
-      return res.status(400).json({ message: "Title & content required" });
+      return res.status(400).json({ message: "Title and content required" });
     }
 
-    const note = new Note({ title, content });
-    await note.save();
+    const newNote = new Note({ title, content });
+    await newNote.save();
 
-    res.status(201).json(note);
+    res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 

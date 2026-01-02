@@ -3,31 +3,22 @@ import Note from "../models/Note.js";
 
 const router = express.Router();
 
-/**
- * ✅ TEST ROUTE
- * GET /api/notes/test
- */
+// ✅ TEST ROUTE (already working)
 router.get("/test", (req, res) => {
   res.json({ message: "Notes API working ✅" });
 });
 
-/**
- * ✅ GET ALL NOTES
- * GET /api/notes
- */
+// ✅ GET ALL NOTES
 router.get("/", async (req, res) => {
   try {
     const notes = await Note.find().sort({ createdAt: -1 });
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Failed to fetch notes" });
   }
 });
 
-/**
- * ✅ CREATE NOTE
- * POST /api/notes
- */
+// ✅ CREATE NOTE
 router.post("/", async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -41,7 +32,7 @@ router.post("/", async (req, res) => {
 
     res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Failed to create note" });
   }
 });
 

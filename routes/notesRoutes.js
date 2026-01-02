@@ -1,38 +1,45 @@
-const express = require("express");
-const router = express.Router();
-const Note = require("../models/Note");
+import express from "express";
+import Note from "../models/Note.js";
 
-// ✅ Test route
+const router = express.Router();
+
+/**
+ * TEST ROUTE
+ */
 router.get("/test", (req, res) => {
   res.json({ message: "Notes API working ✅" });
 });
 
-// ✅ Get all notes
+/**
+ * GET ALL NOTES
+ */
 router.get("/", async (req, res) => {
   try {
     const notes = await Note.find().sort({ createdAt: -1 });
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch notes" });
+    res.status(500).json({ message: err.message });
   }
 });
 
-// ✅ Create a note
+/**
+ * CREATE NOTE
+ */
 router.post("/", async (req, res) => {
   try {
     const { title, content } = req.body;
 
     if (!title || !content) {
-      return res.status(400).json({ error: "All fields required" });
+      return res.status(400).json({ message: "Title and content required" });
     }
 
-    const note = new Note({ title, content });
-    await note.save();
+    const newNote = new Note({ title, content });
+    await newNote.save();
 
-    res.status(201).json(note);
+    res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ error: "Failed to create note" });
+    res.status(500).json({ message: err.message });
   }
 });
 
-module.exports = router;
+export default router;
